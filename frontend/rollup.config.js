@@ -2,7 +2,7 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
-import scss from 'rollup-plugin-scss';
+import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -40,6 +40,7 @@ export default {
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
+			emitCss: true,
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
 			css: css => {
@@ -54,9 +55,20 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
-		scss(),
+		postcss({
+			extract: true,
+			minimize: true,
+			use: [
+			  ['sass', {
+				includePaths: [
+				  './src/styles/theme',
+				  './node_modules'
+				]
+			  }]
+			]
+		  }),
 		commonjs(),
 
 		// In dev mode, call `npm run start` once
