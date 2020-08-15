@@ -29,11 +29,7 @@ func main() {
 	err := db.Open(dbURI)
 	errorHandler(err, 1)
 
-	err = db.Setup()
-	errorHandler(err, 1)
-
-	_, err = db.QueryTest(1)
-	errorHandler(err, 1)
+	db.Setup()
 
 	// Api
     recifyApi := api.New(&db)

@@ -49,24 +49,8 @@ func (db *DB) Open(uri string) error {
 	return nil
 }
 
-func (db *DB) Setup() error {
-	database := db.dbClient.Database("recify")
-	db.database = database
-
-	collection := database.Collection("Test")
-
-	test := model.Test{
-		Id:   1,
-		Text: "12431244123rfweffsasfd",
-	}
-
-	_, err := collection.InsertOne(
-		db.ctx, test)
-	if err != nil {
-		fmt.Println("error while inserting: ", err)
-		return err
-	}
-	return nil
+func (db *DB) Setup(){
+	db.database = db.dbClient.Database("recify")
 }
 
 func (db *DB) QueryTest(id int) (model.Test, error) {
