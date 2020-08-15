@@ -29,6 +29,8 @@ func Login(c *gin.Context) {
 
 func AuthStatus(c *gin.Context) {
     session := sessions.Default(c)
-    c.JSON(http.StatusOK, auth.GetSessionStatus(session))
+    loggedIn, userId := auth.GetSessionStatus(session)
+    
+    c.JSON(http.StatusOK, gin.H { "logged_in" : loggedIn, "user_id" : userId })
 }
 
