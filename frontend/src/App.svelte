@@ -1,7 +1,9 @@
 <script>
-  let name = 'world';
+    import Filler from './components/Filler.svelte';
+    import Navbar from './components/Navbar.svelte';
 </script>
 
-<main>
-  <h1>Hello {name}!</h1>
-</main>
+<div>
+    <Navbar/>
+    <Filler/>
+</div>
