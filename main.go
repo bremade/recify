@@ -36,8 +36,9 @@ func main() {
 	errorHandler(err, 1)
 
 	// Api
+    recifyApi := api.New(&db)
 	apiRouter := router.Group("/api/v1")
-	apiRouter.GET("/status", api.Status)
+	apiRouter.GET("/status", recifyApi.Status)
 
 	// Static files
 	router.Static("/build", "./frontend/public/build")
