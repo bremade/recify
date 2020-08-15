@@ -2,10 +2,12 @@
     import Filler from './components/Filler.svelte';
     import NavBar from './components/Navbar.svelte';
     import Drawer, {AppContent, Content, Header, Title, Subtitle, Scrim} from '@smui/drawer';
-    import Button, {Label} from '@smui/button';
     import List, {Item, Text, Graphic, Separator, Subheader} from '@smui/list';
     import H6 from '@smui/common/H6.svelte';
+    import { Router } from "@sveltech/routify";
+    import { routes } from "@sveltech/routify/tmp/routes";
 
+    // Drawer
     let drawer;
     let drawerOpen;
     let active = 'Inbox';
@@ -15,6 +17,7 @@
     }
 </script>
 
+<Router {routes}/>
 <div>
     <Drawer variant="modal" bind:this={drawer} bind:open={drawerOpen}>
         <Header>

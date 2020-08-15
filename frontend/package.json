@@ -2,13 +2,15 @@
   "name": "recify",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv public"
+    "build": "routify -b && rollup -c",
+    "dev": "routify -c roll-start",
+    "roll-start": "rollup -c -w",
+    "start": "sirv public --single"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "@sveltech/routify": "^1.9.7",
     "node-sass": "^4.14.1",
     "rollup": "^2.3.4",
     "rollup-plugin-livereload": "^1.0.0",
