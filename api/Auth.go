@@ -8,7 +8,7 @@ import (
     "github.com/bremade/recify/auth"
 )
 
-func Login(c *gin.Context) {
+func (api *Api) Login(c *gin.Context) {
     credentials := make(map[string]string)
     err := c.BindJSON(&credentials)
 
@@ -27,10 +27,9 @@ func Login(c *gin.Context) {
     }
 }
 
-func AuthStatus(c *gin.Context) {
+func (api *Api) AuthStatus(c *gin.Context) {
     session := sessions.Default(c)
     loggedIn, userId := auth.GetSessionStatus(session)
     
     c.JSON(http.StatusOK, gin.H { "logged_in" : loggedIn, "user_id" : userId })
 }
-

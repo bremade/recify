@@ -1,0 +1,25 @@
+version: '3.2'
+
+services:
+  recify:
+    build: .
+    container_name: recify
+    environment:
+      - DATABASE_URI=mongodb://recify:recify@mongoDB:27017/?authSource=admin
+    ports:
+      - 8000:8000
+  database:
+    image: mongo:latest
+    container_name: mongoDB
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: recify
+      MONGO_INITDB_ROOT_PASSWORD: recify
+    volumes:
+      - mongo_db:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  mongo_db:
+
