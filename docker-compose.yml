@@ -1,0 +1,8 @@
+version: '3.2'
+
+services:
+  recify:
+    build: .
+    container_name: recify
+    ports:
+      - 8000:8000
