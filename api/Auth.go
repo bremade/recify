@@ -9,8 +9,22 @@ import (
 )
 
 func Login(c *gin.Context) {
-    auth.Login(sessions.Default(c), 0)
-    c.JSONP(http.StatusOK, gin.H{ "status": "ok" })
+    credentials := make(map[string]string)
+    err := c.BindJSON(&credentials)
+
+    if err != nil {
+        c.String(http.StatusBadRequest, "Bad Request")
+        return
+    }
+
+    ok, userId := auth.CheckUser(credentials["username"], credentials["password"])
+
+    if !ok {
+        c.String(http.StatusForbidden, "Login failed")
+    } else {
+        auth.Login(sessions.Default(c), userId)
+        c.String(http.StatusOK, "OK")
+    }
 }
 
 func AuthStatus(c *gin.Context) {

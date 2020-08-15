@@ -17,7 +17,7 @@ func main() {
     apiRouter.GET("/status", api.Status)
 
     // Authentication
-    apiRouter.GET("/auth/login", api.Login)
+    apiRouter.POST("/auth/login", api.Login)
     apiRouter.GET("/auth/status", api.AuthStatus)
     
     // Static files
