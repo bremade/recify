@@ -8,4 +8,6 @@ type Persistence interface {
 	Open(uri string) error
 	Setup() error
 	QueryTest(id int) model.Test
+
+    CreateUser(user model.User) error
 }

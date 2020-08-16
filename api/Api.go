@@ -5,14 +5,16 @@ import (
     "github.com/gin-gonic/gin"
 
     "github.com/bremade/recify/persistence"
+    "github.com/bremade/recify/auth"
 )
 
 type Api struct {
-    db *persistence.DB
+    auth *auth.AuthService
 }
 
 func New(db *persistence.DB) *Api {
-    return &Api{ db: db }
+    authService := auth.New(db)
+    return &Api{ auth: authService }
 }
 
 func (api *Api) Status(c *gin.Context) {

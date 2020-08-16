@@ -41,6 +41,7 @@ func main() {
     // Authentication
     apiRouter.POST("/auth/login", recifyApi.Login)
     apiRouter.GET("/auth/status", recifyApi.AuthStatus)
+    apiRouter.POST("/auth/register", recifyApi.Register)
 
 	// Static files
 	router.Static("/build", "./frontend/public/build")

@@ -7,6 +7,7 @@ import (
 
 	"github.com/bremade/recify/model"
 	"go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -64,4 +65,20 @@ func (db *DB) QueryTest(id int) (model.Test, error) {
 	fmt.Println("result:", result)
 
 	return result, err
+}
+
+func (db *DB) CreateUser(user model.User) error {
+    collection := db.database.Collection("User")
+    newUserId := primitive.NewObjectID().Hex()
+
+    // Assign new unique user id
+    user.Id = newUserId
+
+    _, err := collection.InsertOne(db.ctx, user)
+
+    if err != nil {
+        return err
+    } else {
+        return nil
+    }
 }

@@ -3,9 +3,32 @@ package auth
 import (
     "crypto/sha256"
     "encoding/hex"
+
+    "github.com/bremade/recify/persistence"
+    "github.com/bremade/recify/model"
 )
 
-func CheckUser(username string, password string) (bool, int) {
+type AuthService struct {
+    db *persistence.DB
+}
+
+func New(db *persistence.DB) *AuthService {
+    return &AuthService{ db: db }
+}
+
+func (as *AuthService) RegisterUser(username string, password string) error {
+    passwordHash := hashPassword(password)
+
+    user := model.User{
+        Id: "",
+        Name: username,
+        PasswordHash: passwordHash,
+    }
+
+    return as.db.CreateUser(user)
+}
+
+func (as *AuthService) CheckUser(username string, password string) (bool, int) {
     passwordHash := hashPassword(password)
 
     // username:password
