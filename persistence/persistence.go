@@ -10,4 +10,6 @@ type Persistence interface {
 	QueryTest(id int) model.Test
 
     CreateUser(user model.User) error
+    CheckUser(name string, passwordHash string) (string, error)
+    ContainsUsername(name string) bool
 }

@@ -34,12 +34,17 @@ func (api *Api) Register(c *gin.Context) {
         return
     }
 
-    err = api.auth.RegisterUser(credentials["username"], credentials["password"])
+    taken, err := api.auth.RegisterUser(credentials["username"], credentials["password"])
+
+    if taken {
+        c.String(http.StatusConflict, "Username already taken")
+        return
+    }
 
     if err == nil {
         c.String(http.StatusOK, "Registration OK")
     } else {
-        c.String(http.StatusInternalServerError, "Database error")
+        c.String(http.StatusInternalServerError, err.Error())
     }
 }
 

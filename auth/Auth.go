@@ -16,8 +16,12 @@ func New(db *persistence.DB) *AuthService {
     return &AuthService{ db: db }
 }
 
-func (as *AuthService) RegisterUser(username string, password string) error {
+func (as *AuthService) RegisterUser(username string, password string) (bool, error) {
     passwordHash := hashPassword(password)
+
+    if as.db.ContainsUsername(username) {
+        return true, nil
+    }
 
     user := model.User{
         Id: "",
@@ -25,17 +29,18 @@ func (as *AuthService) RegisterUser(username string, password string) error {
         PasswordHash: passwordHash,
     }
 
-    return as.db.CreateUser(user)
+    return false, as.db.CreateUser(user)
 }
 
-func (as *AuthService) CheckUser(username string, password string) (bool, int) {
+func (as *AuthService) CheckUser(username string, password string) (bool, string) {
     passwordHash := hashPassword(password)
 
-    // username:password
-    if username == "username" && passwordHash == "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8" {
-        return true, 1
+    userId, err := as.db.CheckUser(username, passwordHash)
+
+    if err != nil {
+        return false, ""
     } else {
-        return false, 0
+        return true, userId
     }
 }
 

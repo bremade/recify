@@ -1,8 +1,8 @@
 package persistence
 
 import (
-	"context"
-	"fmt"
+    "context"
+    "fmt"
 	"time"
 
 	"github.com/bremade/recify/model"
@@ -23,7 +23,6 @@ func (err DBError) Error() string {
 type DB struct {
 	dbClient *mongo.Client
 	database *mongo.Database
-	ctx      context.Context
 }
 
 func (db *DB) Open(uri string) error {
@@ -36,7 +35,6 @@ func (db *DB) Open(uri string) error {
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
 	err = client.Connect(ctx)
 	if err != nil {
 		fmt.Println("error connecting to mongodb", err)
@@ -44,7 +42,6 @@ func (db *DB) Open(uri string) error {
 	}
 
 	db.dbClient = client
-	db.ctx = ctx
 
 	fmt.Println("mongodb opened")
 	return nil
@@ -58,7 +55,8 @@ func (db *DB) QueryTest(id int) (model.Test, error) {
 	collection := db.database.Collection("Test")
 	var result model.Test
 
-	err := collection.FindOne(db.ctx, bson.D{
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err := collection.FindOne(ctx, bson.D{
 		{Key: "id", Value: id},
 	}).Decode(&result)
 
@@ -74,11 +72,41 @@ func (db *DB) CreateUser(user model.User) error {
     // Assign new unique user id
     user.Id = newUserId
 
-    _, err := collection.InsertOne(db.ctx, user)
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    _, err := collection.InsertOne(ctx, user)
 
     if err != nil {
         return err
     } else {
         return nil
     }
+}
+
+func (db *DB) CheckUser(name string, passwordHash string) (string, error) {
+    collection := db.database.Collection("User")
+
+    var user model.User
+
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    err := collection.FindOne(ctx, bson.D{
+		{Key: "name", Value: name},
+        {Key: "passwordhash", Value: passwordHash},
+	}).Decode(&user)
+
+    if err != nil {
+        return "", err
+    } else {
+        return user.Id, nil
+    }
+}
+
+func (db *DB) ContainsUsername(name string) bool {
+    collection := db.database.Collection("User")
+
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    cnt, _ := collection.CountDocuments(ctx, bson.D{
+		{Key: "name", Value: name},
+	})
+
+    return cnt > 0
 }
