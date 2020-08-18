@@ -4,10 +4,12 @@ import (
     "net/http"
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/sessions"
+
+    "github.com/bremade/recify/model"
 )
 
 func (api *Api) Login(c *gin.Context) {
-    credentials := make(map[string]string)
+    var credentials model.UsernameAndPassword
     err := c.BindJSON(&credentials)
 
     if err != nil {
@@ -15,7 +17,7 @@ func (api *Api) Login(c *gin.Context) {
         return
     }
 
-    ok, userId := api.auth.CheckUser(credentials["username"], credentials["password"])
+    ok, userId := api.auth.CheckUser(credentials.Username, credentials.Password)
 
     if !ok {
         c.String(http.StatusForbidden, "Login failed")
@@ -26,7 +28,7 @@ func (api *Api) Login(c *gin.Context) {
 }
 
 func (api *Api) Register(c *gin.Context) {
-    credentials := make(map[string]string)
+    var credentials model.UsernameAndPassword
     err := c.BindJSON(&credentials)
 
     if err != nil {
@@ -34,7 +36,7 @@ func (api *Api) Register(c *gin.Context) {
         return
     }
 
-    taken, err := api.auth.RegisterUser(credentials["username"], credentials["password"])
+    taken, err := api.auth.RegisterUser(credentials.Username, credentials.Password)
 
     if taken {
         c.String(http.StatusConflict, "Username already taken")
@@ -51,6 +53,20 @@ func (api *Api) Register(c *gin.Context) {
 func (api *Api) AuthStatus(c *gin.Context) {
     session := sessions.Default(c)
     loggedIn, userId := api.auth.GetSessionStatus(session)
+
+    // Fetch username
+    username := ""
+    if loggedIn {
+        user, err := api.db.GetUserById(userId)
+        if err != nil {
+            c.String(http.StatusInternalServerError, err.Error())
+            return
+        }
+        username = user.Name
+    }
     
-    c.JSON(http.StatusOK, gin.H { "logged_in" : loggedIn, "user_id" : userId })
+    c.JSON(http.StatusOK, model.SessionStatus{
+        LoggedIn: loggedIn,
+        Username: username,
+    })
 }

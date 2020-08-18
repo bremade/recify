@@ -12,4 +12,5 @@ type Persistence interface {
     CreateUser(user model.User) error
     CheckUser(name string, passwordHash string) (string, error)
     ContainsUsername(name string) bool
+    GetUserById(id string) (model.User, error)
 }

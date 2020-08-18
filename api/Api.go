@@ -10,11 +10,12 @@ import (
 
 type Api struct {
     auth *auth.AuthService
+    db *persistence.DB
 }
 
 func New(db *persistence.DB) *Api {
     authService := auth.New(db)
-    return &Api{ auth: authService }
+    return &Api{ auth: authService, db: db }
 }
 
 func (api *Api) Status(c *gin.Context) {

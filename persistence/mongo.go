@@ -110,3 +110,21 @@ func (db *DB) ContainsUsername(name string) bool {
 
     return cnt > 0
 }
+
+func (db *DB) GetUserById(id string) (model.User, error) {
+    collection := db.database.Collection("User")
+
+    var user model.User
+
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    err := collection.FindOne(ctx, bson.D{
+        {Key: "_id", Value: id},
+    }).Decode(&user)
+
+    if err != nil {
+        return user, err
+    }
+
+    return user, nil
+}
+
