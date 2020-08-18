@@ -5,7 +5,8 @@ services:
     build: .
     container_name: recify
     environment:
-      - DATABASE_URI=mongodb://recify:recify@mongoDB:27017/?authSource=admin
+      - PORT=8000
+      - DATABASE_URI=mongodb://recify:recify@database:27017/?authSource=admin
     ports:
       - 8000:8000
   database:
