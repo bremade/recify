@@ -1,12 +1,13 @@
 package main
 
 import (
-	"os"
-
-	"github.com/gin-gonic/gin"
-
-	"github.com/bremade/recify/api"
-	"github.com/bremade/recify/persistence"
+    "os"
+    "github.com/gin-gonic/gin"
+    "github.com/gin-contrib/sessions"
+    
+    "github.com/bremade/recify/api"
+    "github.com/bremade/recify/auth"
+    "github.com/bremade/recify/persistence"
 )
 
 func errorHandler(err error, exitCode int) {
@@ -17,6 +18,7 @@ func errorHandler(err error, exitCode int) {
 
 func main() {
 	router := gin.Default()
+    router.Use(sessions.Sessions("recify_session", auth.GetSessionStore()))
 
 	// Database
 	db := persistence.DB{}
@@ -35,6 +37,12 @@ func main() {
     recifyApi := api.New(&db)
 	apiRouter := router.Group("/api/v1")
 	apiRouter.GET("/status", recifyApi.Status)
+
+    // Authentication
+    apiRouter.POST("/auth/login", recifyApi.Login)
+    apiRouter.GET("/auth/status", recifyApi.AuthStatus)
+    apiRouter.POST("/auth/register", recifyApi.Register)
+    apiRouter.POST("/auth/logout", recifyApi.Logout)
 
 	// Static files
 	router.Static("/build", "./frontend/public/build")
