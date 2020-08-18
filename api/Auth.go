@@ -27,6 +27,11 @@ func (api *Api) Login(c *gin.Context) {
     }
 }
 
+func (api *Api) Logout(c *gin.Context) {
+    api.auth.Logout(sessions.Default(c))
+    c.String(http.StatusOK, "OK")
+}
+
 func (api *Api) Register(c *gin.Context) {
     var credentials model.UsernameAndPassword
     err := c.BindJSON(&credentials)

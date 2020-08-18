@@ -15,6 +15,12 @@ func (as *AuthService) Login(session sessions.Session, userId string) {
     session.Save()
 }
 
+func (as *AuthService) Logout(session sessions.Session) {
+    session.Set("logged_in", false)
+    session.Delete("user_id")
+    session.Save()
+}
+
 func (as *AuthService) GetSessionStatus(session sessions.Session) (bool, string) {
     loggedIn, _ := session.Get("logged_in").(bool)
     userId, _   := session.Get("user_id").(string)
