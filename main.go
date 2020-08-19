@@ -45,8 +45,10 @@ func main() {
     apiRouter.POST("/auth/logout", recifyApi.Logout)
 
 	// Static files
-	router.Static("/build", "./frontend/public/build")
-	router.StaticFile("/", "./frontend/public/index.html")
+	router.Static("/build", "./frontend/static/build")
+	router.NoRoute(func(c *gin.Context) {
+		c.File("./frontend/static/index.html")
+	})
 
 	err = router.Run(":8080")
 	errorHandler(err, 2)
