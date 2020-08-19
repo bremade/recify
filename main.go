@@ -20,6 +20,11 @@ func main() {
 	router := gin.Default()
     router.Use(sessions.Sessions("recify_session", auth.GetSessionStore()))
 
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8000"
+	}
+
 	// Database
 	db := persistence.DB{}
 
@@ -50,6 +55,6 @@ func main() {
 		c.File("./frontend/static/index.html")
 	})
 
-	err = router.Run(":8080")
+	err = router.Run(":" + port)
 	errorHandler(err, 2)
 }

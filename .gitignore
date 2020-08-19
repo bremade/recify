@@ -21,3 +21,9 @@
 # Production
 */static/build
 */package-lock.json
+*package-lock.json
+
+### Backend ###
+# Testing
+*/__pycache__
+*package-lock.json

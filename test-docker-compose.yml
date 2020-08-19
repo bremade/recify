@@ -1,0 +1,35 @@
+version: "3.2"
+
+services:
+  recify:
+    build: .
+    container_name: recify
+    environment:
+      - PORT=8001
+      - DATABASE_URI=mongodb://recify:recify@database:27017/?authSource=admin
+    depends_on:
+      - database
+
+  api_tests:
+    build:
+      context: .
+      dockerfile: test/Dockerfile
+    container_name: api_tests
+    environment:
+      - BASE_URL=http://recify:8001
+      - DATABASE_URI=mongodb://recify:recify@database:27017/?authSource=admin
+    depends_on:
+      - recify
+
+  database:
+    image: mongo:latest
+    container_name: test_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: recify
+      MONGO_INITDB_ROOT_PASSWORD: recify
+    volumes:
+      - test_db:/data/db
+
+volumes:
+  test_db:
