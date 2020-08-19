@@ -1,0 +1,34 @@
+.login-container {
+
+  .login {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 200px;
+
+    .title {
+      text-align: center;
+      padding: 15px 0px 5px 0px;
+      font-size: 25px;
+    }
+
+    .input-container {
+      padding: 20px;
+
+      .textfield {
+        width: 100%;
+      }
+
+      .login-button {
+        width: 100%;
+        margin-top: 20px;
+      }
+      
+      .register-button {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  }
+  
+}
