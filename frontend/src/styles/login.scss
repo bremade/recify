@@ -12,6 +12,10 @@
       font-size: 25px;
     }
 
+    p {
+      text-align: center;
+    }
+
     .input-container {
       padding: 20px;
 
@@ -27,6 +31,10 @@
       .register-button {
         width: 100%;
         margin-top: 10px;
+      }
+
+      .logout-button {
+        width: 100%;
       }
     }
   }
