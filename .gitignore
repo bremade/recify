@@ -19,5 +19,5 @@
 */node_modules
 
 # Production
-*/public/build
+*/static/build
 */package-lock.json
