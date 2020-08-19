@@ -1,9 +1,7 @@
 <script>
-    import Filler from './components/Filler.svelte';
-    import Navbar from './components/Navbar.svelte';
+    import { Router } from "@sveltech/routify";
+    import { routes } from "@sveltech/routify/tmp/routes";
+    import "./styles/global.scss";
 </script>
 
-<div>
-    <Navbar/>
-    <Filler/>
-</div>
+<Router {routes} />

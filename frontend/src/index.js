@@ -1,9 +1,10 @@
-
+import HMR from '@sveltech/routify/hmr'
 import App from './App.svelte';
-import './styles/global.scss';
 
-const app = new App({
-    target: document.body
-});
+const app = HMR(
+	App, 
+	{ target: document.body }, 
+	'recify'
+	)
 
 export default app;

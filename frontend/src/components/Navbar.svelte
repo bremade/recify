@@ -2,7 +2,6 @@
     import TopAppBar, {Row, Section, Title} from '@smui/top-app-bar';
     import IconButton from '@smui/icon-button';
     import Sidebar from './Sidebar.svelte';
-
     let prominent = false;
     let dense = false;
     let secondaryColor = false;
