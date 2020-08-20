@@ -1,12 +1,19 @@
 package auth
 
 import (
+    "os"
+    
     "github.com/gin-contrib/sessions/memstore"
     "github.com/gin-contrib/sessions"
 )
 
 func GetSessionStore() memstore.Store {
-    return memstore.NewStore([]byte("secret_key"))
+    secret := os.Getenv("SESSION_SECRET")
+	if len(secret) == 0 {
+		secret = "secret_key"
+	}
+    
+    return memstore.NewStore([]byte(secret))
 }
 
 func (as *AuthService) Login(session sessions.Session, userId string) {
