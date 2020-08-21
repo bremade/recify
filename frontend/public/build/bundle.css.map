@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../../Filler.svelte"
+  ],
+  "sourcesContent": [
+    "{#each Array(5) as item}\n    <p class=\"filler\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n{/each}\n\n<style>\n    .filler {\n        margin: 10px;\n    }\n</style>"
+  ],
+  "names": [],
+  "mappings": "AAKI,OAAO,eAAC,CAAC,AACL,MAAM,CAAE,IAAI,AAChB,CAAC"
+}
