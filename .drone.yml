@@ -29,6 +29,8 @@ steps:
       branch:
         - master
         - develop
+      event:
+        - push
 
 volumes:
     - name: docker_socket
