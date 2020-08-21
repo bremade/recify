@@ -1,0 +1,37 @@
+kind: pipeline
+type: docker
+name: recify-cicd
+
+steps:
+  - name: Integrationtests
+    image: docker/compose
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
+    commands:
+      - docker-compose -f test-docker-compose.yml up --build -d
+      - sleep 5
+      - EXIT_CODE=$(docker inspect api_tests --format='{{.State.ExitCode}}')
+      - if [ $EXIT_CODE -eq 1 ]; then exit 1; fi
+      - docker-compose -f test-docker-compose.yml down
+  - name: Deployment
+    image: kroniak/ssh-client
+    commands:
+      - eval `ssh-agent -s`
+      - echo "$SSH_KEY" | ssh-add -
+      - mkdir -p ~/.ssh
+      - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+      - ssh jan@10.1.0.14 "cd /opt/recify && git pull && docker-compose up --build -d"
+    environment:
+      SSH_KEY:
+        from_secret: drone_ssh_key
+    when:
+      branch:
+        - master
+        - develop
+
+volumes:
+    - name: docker_socket
+      host:
+        path: /var/run/docker.sock
+
