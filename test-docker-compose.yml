@@ -3,7 +3,7 @@ version: "3.2"
 services:
   recify:
     build: .
-    container_name: recify
+    container_name: recify_test
     environment:
       - PORT=8001
       - DATABASE_URI=mongodb://recify:recify@database:27017/?authSource=admin
@@ -33,3 +33,5 @@ services:
 
 volumes:
   test_db:
+
+
