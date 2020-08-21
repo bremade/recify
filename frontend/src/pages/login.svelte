@@ -77,8 +77,9 @@
         <Textfield type="password" class="textfield" label="Password" bind:value={password}></Textfield>
         {#if register}
           <Textfield type="password" class="textfield" label="Repeat password" bind:value={repeatedPassword} invalid={password !== repeatedPassword}></Textfield>
-         {/if}
-        <Button class="login-button" on:click={login} variant="unelevated">Login</Button>
+        {:else}
+          <Button class="login-button" on:click={login} variant="unelevated">Login</Button>
+        {/if}
         <Button class="register-button" on:click={doRegister}>Register</Button>
       </div>
     </Card>
