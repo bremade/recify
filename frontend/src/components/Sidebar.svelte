@@ -1,37 +1,54 @@
 <script>
-    import Drawer, {Content, Header, Title, Subtitle, Scrim} from '@smui/drawer';
-    import List, {Item, Text, Graphic, Separator, Subheader} from '@smui/list';
-    import H6 from '@smui/common/H6.svelte';
+  import Drawer, {Content, Header, Title, Subtitle, Scrim} from '@smui/drawer';
+  import List, {Item, Text, Graphic, Separator, Subheader} from '@smui/list';
+  import H6 from '@smui/common/H6.svelte';
+  import session from '../stores/session.js';
 
-    let drawer;
-    export let drawerOpen = false;
-    let active = 'Create Recipe';
-    function setActive(value) {
-        active = value;
-        drawerOpen = false;
-    }
+  session.updateSessionStatus();
+
+  let drawer;
+  export let drawerOpen = false;
+  let active = 'Create Recipe';
+  function setActive(value) {
+    active = value;
+    drawerOpen = false;
+  }
 </script>
 
 <div>
     <Drawer variant="modal" bind:this={drawer} bind:open={drawerOpen}>
-        <Header>
+      <Header>
         <Title>Recify</Title>
-        <Subtitle>Welcome to our website.</Subtitle>
-        </Header>
+        {#if $session.logged_in}
+          <Subtitle>Logged in as <strong>{$session.username}</strong></Subtitle>
+        {:else}
+          <Subtitle>Welcome to our website.</Subtitle>
+        {/if}
+      </Header>
         <Content>
-        <List>
-            <Item href="javascript:void(0)" on:click={() => setActive('Create Recipe')} activated={active === 'Create Recipe'}>
+          <List>
+            <Separator nav />
+            <Subheader component={H6}>User</Subheader>
+
+            {#if $session.logged_in}
+              <Item href="javascript:void(0)" on:click={() => setActive('Create Recipe')} activated={active === 'Create Recipe'}>
                 <Graphic class="material-icons" aria-hidden="true">fastfood</Graphic>
                 <Text>Create Recipe</Text>
-            </Item>
-            <Item href="javascript:void(0)" on:click={() => setActive('Import Recipe')} activated={active === 'Import Recipe'}>
+              </Item>
+              <Item href="javascript:void(0)" on:click={() => setActive('Import Recipe')} activated={active === 'Import Recipe'}>
                 <Graphic class="material-icons" aria-hidden="true">restaurant_menu</Graphic>
                 <Text>Import Recipe</Text>
-            </Item>
-            <Item href="javascript:void(0)" on:click={() => setActive('Logout')} activated={active === 'Logout'}>
+              </Item>
+              <Item href="javascript:void(0)" on:click={() => window.location.pathname = '/logout'} activated={false}>
                 <Graphic class="material-icons" aria-hidden="true">exit_to_app</Graphic>
                 <Text>Logout</Text>
-            </Item>
+              </Item>
+            {:else}
+              <Item href="javascript:void(0)" on:click={() => window.location.pathname = '/login'} activated={false}>
+                <Graphic class="material-icons" aria-hidden="true">account_circle</Graphic>
+                <Text>Login</Text>
+              </Item>
+            {/if}
 
             <Separator nav />
             <Subheader component={H6}>Recipes</Subheader>
