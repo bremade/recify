@@ -45,6 +45,12 @@ func (api *Api) CreateRecipe(c *gin.Context) {
         return
     }
 
+    err =  api.CheckIngredients(recipeInput.Ingredients)
+    if err != nil {
+        c.String(http.StatusBadRequest, "Error while creating ingredients")
+        return
+    }
+
     err = api.db.CreateRecipe(recipeInput)
 
     if err != nil {
@@ -68,6 +74,12 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
 
     if err != nil {
         c.String(http.StatusBadRequest, "Bad Request")
+        return
+    }
+
+    err =  api.CheckIngredients(recipeInput.Ingredients)
+    if err != nil {
+        c.String(http.StatusBadRequest, "Error while creating ingredients")
         return
     }
 
@@ -107,7 +119,7 @@ func (api *Api) DeleteRecipe(c *gin.Context) {
     id := c.Query("id")
 
     if id == "" {
-        c.String(http.StatusBadRequest, "No recipe id specified")
+        c.String(http.StatusInternalServerError, "No recipe id specified")
         return
     }
 
@@ -169,4 +181,22 @@ func (api *Api) CheckAuthentication(id string, username string) (bool, error) {
     return util.ContainsString(recipe.Creators, username), nil
 }
 
+func (api *Api) CheckIngredients(ingredientsInput []model.Ingredient) error {
+    ingredientsDB, err := api.db.GetAllIngredients()
 
+    if err != nil {
+        return err
+    }
+
+    for _, ingredient := range ingredientsInput {
+        if !util.ContainsIngredient(ingredientsDB, ingredient) {
+            err = api.db.CreateIngredient(ingredient)
+        }
+    }
+
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
