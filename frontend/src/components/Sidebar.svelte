@@ -8,7 +8,7 @@
 
   let drawer;
   export let drawerOpen = false;
-  let active = 'Create Recipe';
+  let active = 'Auth';
   function setActive(value) {
     active = value;
     drawerOpen = false;
@@ -39,12 +39,12 @@
                 <Graphic class="material-icons" aria-hidden="true">restaurant_menu</Graphic>
                 <Text>Import Recipe</Text>
               </Item>
-              <Item href="javascript:void(0)" on:click={() => window.location.pathname = '/logout'} activated={false}>
+              <Item href="javascript:void(0)" on:click={() => {window.location.pathname = '/logout'; setActive('Auth')}} activated={active === 'Auth'}>
                 <Graphic class="material-icons" aria-hidden="true">exit_to_app</Graphic>
                 <Text>Logout</Text>
               </Item>
             {:else}
-              <Item href="javascript:void(0)" on:click={() => window.location.pathname = '/login'} activated={false}>
+              <Item href="/login" on:click={() => setActive('Auth')} activated={active === 'Auth'}>
                 <Graphic class="material-icons" aria-hidden="true">account_circle</Graphic>
                 <Text>Login</Text>
               </Item>
