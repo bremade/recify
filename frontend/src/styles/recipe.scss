@@ -1,0 +1,29 @@
+
+main#recipe {
+  max-width: 800px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+
+  h1 {
+    text-align: center;
+  }
+
+  .fullwidth {
+    width: 100%;
+  }
+
+  .tag-icon {
+    margin-left: 5px;
+    color: rgba(0,0,0,.5);
+  }
+
+  .link {
+    color: #4287f5;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+
