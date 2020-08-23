@@ -4,7 +4,6 @@ import (
     "fmt"
     "net/http"
     "github.com/gin-gonic/gin"
-    "github.com/gin-contrib/sessions"
 
     "go.mongodb.org/mongo-driver/bson/primitive"
     "github.com/bremade/recify/model"
@@ -25,7 +24,7 @@ func (api *Api) RetrieveRecipes(c *gin.Context) {
 
 func (api *Api) CreateRecipe(c *gin.Context) {
 
-    ok, _ := api.CheckLogin(c)
+    ok, username := api.CheckLogin(c)
 
     if !ok {
         c.String(http.StatusForbidden, "User is not logged in")
@@ -56,6 +55,8 @@ func (api *Api) CreateRecipe(c *gin.Context) {
         c.String(http.StatusBadRequest, "Error while creating ingredients")
         return
     }
+
+    recipeInput.Creators = append(recipeInput.Creators, username)
 
     err = api.db.CreateRecipe(recipeInput)
 
@@ -179,22 +180,6 @@ func (api *Api) RetrieveTags(c *gin.Context) {
     }
 }
 
-func (api *Api) CheckLogin(c *gin.Context) (bool, string) {
-    session := sessions.Default(c)
-    loggedIn, userId := api.auth.GetSessionStatus(session)
-
-    // Fetch username
-    if loggedIn {
-        user, err := api.db.GetUserById(userId)
-        if err != nil {
-            return false, ""
-        }
-        return true, user.Name
-    } else {
-        return false, ""
-    }
-}
-
 func (api *Api) CheckAuthentication(id string, username string) (bool, error) {
     recipe, err := api.db.GetSingleRecipe(id)
 
@@ -234,7 +219,6 @@ func (api *Api) CheckTags(tagsInput []model.Tag) error {
 
     for _, tag := range tagsInput {
         if !util.ContainsTag(tagsDB, tag) {
-            fmt.Println("CREATING TAG")
             err = api.db.CreateTag(tag)
         }
     }
