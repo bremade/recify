@@ -63,7 +63,7 @@ func (api *Api) CreateRecipe(c *gin.Context) {
     if err != nil {
         c.String(http.StatusInternalServerError, err.Error())
     } else {
-        c.JSON(http.StatusOK, "OK")
+        c.String(http.StatusCreated, "OK")
     }
 }
 
@@ -84,6 +84,15 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
         return
     }
 
+    ok, err = api.CheckAuthentication(recipeInput.Id, username)
+    if err != nil {
+        c.String(http.StatusNotFound, "Recipe with id %v was not found", recipeInput.Id)
+        return
+    } else if !ok {
+        c.String(http.StatusForbidden, "User %v is not the creator of the recipe %v", username, recipeInput.Id)
+        return
+    }
+
     err = api.CheckTags(recipeInput.Tags)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating tags")
@@ -93,15 +102,6 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
     err =  api.CheckIngredients(recipeInput.Ingredients)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating ingredients")
-        return
-    }
-
-    ok, err = api.CheckAuthentication(recipeInput.Id, username)
-    if err != nil {
-        c.String(http.StatusNotFound, "Recipe with id %v was not found", recipeInput.Id)
-        return
-    } else if !ok {
-        c.String(http.StatusForbidden, "User %v is not the creator of the recipe %v", username, recipeInput.Id)
         return
     }
 
@@ -116,7 +116,7 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
     } else if modifiedCount != 1 {
         c.String(http.StatusInternalServerError, "Modified %v recipes instead of 1", modifiedCount)
     } else {
-        c.JSON(http.StatusOK, "OK")
+        c.String(http.StatusOK, "OK")
     }
 }
 
@@ -152,7 +152,7 @@ func (api *Api) DeleteRecipe(c *gin.Context) {
     } else if deletedCount != 1 {
         c.String(http.StatusInternalServerError, "Deleted %v recipes instead of 1", deletedCount)
     } else {
-        c.JSON(http.StatusOK, "OK")
+        c.String(http.StatusOK, "OK")
     }
 }
 
