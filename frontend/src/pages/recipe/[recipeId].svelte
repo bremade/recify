@@ -49,6 +49,18 @@
     tag_dialog.open();
   }
 
+  function formatTime(minutes) {
+    if (minutes < 60) {
+      return `${minutes} min`;
+    } else {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return `${h} h ${m} min`;
+    }
+  }
+
+  var edit = false;
+
   var custom_tag = '';
   var tag_dialog;
   var custom_tag_value = '';
@@ -57,32 +69,48 @@
 <div>
   <main id="recipe">
     <Card variant="outlined">
-      <h1 class="mt-4">{recipe.title}</h1>
       <Container class="mt-4">
         <Row>
           <Col sm="12">
-          <Textfield fullwidth textarea bind:value={recipe.description} label="Description" />
+          {#if edit}
+            <Textfield variant="outlined" bind:value={recipe.title} label="Title" />
+          {:else}
+            <h1>{recipe.title}</h1>
+          {/if}
           </Col>
         </Row>
-        <hr />
+        {#if edit}
+          <hr />
+        {/if}
         <Row class="mt-2">
-          <Col sm="6">
-          <Textfield variant="outlined" withTrailingIcon bind:value={recipe.servings} label="Servings" class="fullwidth" type="number">
-            <Icon class="material-icons">people</Icon>
-          </Textfield>
+          <Col sm="12">
+          {#if edit}
+            <Textfield fullwidth textarea bind:value={recipe.description} label="Description" />
+          {:else}
+            <p>{recipe.description}</p>
+          {/if}
+          </Col>
+        </Row>
+        {#if edit}
+          <hr />
+          <Row class="mt-2">
+            <Col sm="6">
+            <Textfield variant="outlined" withTrailingIcon bind:value={recipe.servings} label="Servings" class="fullwidth" type="number">
+              <Icon class="material-icons">people</Icon>
+            </Textfield>
           </Col>
           <Col sm="6">
           <Textfield variant="outlined" withTrailingIcon bind:value={recipe.price} label="Price"  class="fullwidth">
             <Icon class="material-icons">euro_symbol</Icon>
           </Textfield>
           </Col>
-        </Row>
-        <hr />
-        <Row class="mt-2">
-          <Col sm="4">
-          <Textfield variant="outlined" withTrailingIcon bind:value={recipe.time.cooktime} label="Cook time (minutes)" class="fullwidth">
-            <Icon class="material-icons">schedule</Icon>
-          </Textfield>
+          </Row>
+          <hr />
+          <Row class="mt-2">
+            <Col sm="4">
+            <Textfield variant="outlined" withTrailingIcon bind:value={recipe.time.cooktime} label="Cook time (minutes)" class="fullwidth">
+              <Icon class="material-icons">schedule</Icon>
+            </Textfield>
           </Col>
           <Col sm="4">
           <Textfield variant="outlined" withTrailingIcon bind:value={recipe.time.worktime} label="Work time (minutes)"  class="fullwidth">
@@ -94,25 +122,50 @@
             <Icon class="material-icons">schedule</Icon>
           </Textfield>
           </Col>
-        </Row>
+          </Row>
+        {:else}
+          <p>
+            <span class="m-2"><strong>{recipe.servings}</strong> Servings</span>&#x25CF;
+            <span class="m-2"><strong>{recipe.price}</strong> &#x20AC</span>
+          </p>
+          <p>
+            <span class="m-2"><em>Cook time:</em> <strong>{formatTime(recipe.time.cooktime)}</strong></span>&#x25CF;
+            <span class="m-2"><em>Work time:</em> <strong>{formatTime(recipe.time.worktime)}</strong></span>&#x25CF;
+            <span class="m-2"><em>Rest time:</em> <strong>{formatTime(recipe.time.resttime)}</strong></span>
+          </p>
+          <hr />
+          <p>
+            <Set chips={recipe.tags} let:chip input style="display: inline">
+              <Chip><Text>{chip}</Text></Chip>
+            </Set>
+          </p>
+          <hr />
+        {/if}
       </Container>
     </Card>
-    <Card variant="outlined" class="mt-3">
-      <Container class="mt-4 mb-4">
-        <h4>Tags</h4>
-        <a class="link" on:click={clearTags}>Clear all</a>
-        <a class="link ml-2" on:click={addCustomTag}>Add</a>
-        <hr />
-        <Set chips={recipe.tags} let:chip input>
-          <Chip><Text>{chip}</Text><Icon class="material-icons tag-icon" trailing tabindex="0" on:click={() => removeTag(chip)}>cancel</Icon></Chip>
-        </Set>
-        <hr />
-        Choose tags:
-        <Set chips={all_tags} let:chip input>
-          <Chip on:click={() => addTag(chip)}><Text>{chip}</Text></Chip>
-        </Set>
-      </Container>
-    </Card>
+    {#if edit}
+      <Card variant="outlined" class="mt-3">
+        <Container class="mt-4 mb-4">
+          <h4>Tags</h4>
+          <a class="link" on:click={clearTags}>Clear all</a>
+          <a class="link ml-2" on:click={addCustomTag}>Add</a>
+          <hr />
+          <Set chips={recipe.tags} let:chip input>
+            <Chip>
+              <Text>{chip}</Text>
+              <Icon class="material-icons tag-icon" trailing tabindex="0" on:click={() => removeTag(chip)}>cancel</Icon>
+            </Chip>
+          </Set>
+          <hr />
+          Choose tags:
+          <Set chips={all_tags} let:chip input>
+            <Chip on:click={() => addTag(chip)}><Text>{chip}</Text></Chip>
+          </Set>
+        </Container>
+      </Card>
+    {/if}
+
+    <Button on:click={() => edit = !edit}>Toggle edit mode</Button>
   </main>
 
   <!-- Create new tag dialog -->
