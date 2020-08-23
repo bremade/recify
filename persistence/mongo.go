@@ -231,3 +231,35 @@ func (db *DB) CreateIngredient(ingredient model.Ingredient) error {
         return nil
     }
 }
+
+func (db *DB) GetAllTags() ([]model.Tag, error) {
+    collection := db.database.Collection("Tag")
+
+    var tags []model.Tag
+
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    cursor, err := collection.Find(ctx, bson.M{})
+
+    if err != nil {
+        return tags, err
+    }
+
+    if err = cursor.All(ctx, &tags); err != nil {
+        return tags, err
+    }
+
+    return tags, nil
+}
+
+func (db *DB) CreateTag(tag model.Tag) error {
+    collection := db.database.Collection("Tag")
+
+    ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+    _, err := collection.InsertOne(ctx, tag)
+
+    if err != nil {
+        return err
+    } else {
+        return nil
+    }
+}

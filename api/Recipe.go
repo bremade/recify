@@ -45,6 +45,12 @@ func (api *Api) CreateRecipe(c *gin.Context) {
         return
     }
 
+    err = api.CheckTags(recipeInput.Tags)
+    if err != nil {
+        c.String(http.StatusBadRequest, "Error while creating tags")
+        return
+    }
+
     err =  api.CheckIngredients(recipeInput.Ingredients)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating ingredients")
@@ -74,6 +80,12 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
 
     if err != nil {
         c.String(http.StatusBadRequest, "Bad Request")
+        return
+    }
+
+    err = api.CheckTags(recipeInput.Tags)
+    if err != nil {
+        c.String(http.StatusBadRequest, "Error while creating tags")
         return
     }
 
@@ -155,6 +167,18 @@ func (api *Api) RetrieveIngredients(c *gin.Context) {
     }
 }
 
+func (api *Api) RetrieveTags(c *gin.Context) {
+
+    tags, err := api.db.GetAllTags()
+
+    if err != nil || len(tags) <= 0 {
+        c.String(http.StatusNotFound, "No tags found")
+        fmt.Println(err)
+    } else {
+        c.JSON(http.StatusOK, tags)
+    }
+}
+
 func (api *Api) CheckLogin(c *gin.Context) (bool, string) {
     session := sessions.Default(c)
     loggedIn, userId := api.auth.GetSessionStatus(session)
@@ -200,3 +224,25 @@ func (api *Api) CheckIngredients(ingredientsInput []model.Ingredient) error {
 
     return nil
 }
+
+func (api *Api) CheckTags(tagsInput []model.Tag) error {
+    tagsDB, err := api.db.GetAllTags()
+
+    if err != nil {
+        return err
+    }
+
+    for _, tag := range tagsInput {
+        if !util.ContainsTag(tagsDB, tag) {
+            fmt.Println("CREATING TAG")
+            err = api.db.CreateTag(tag)
+        }
+    }
+
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+

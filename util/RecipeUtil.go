@@ -19,3 +19,12 @@ func ContainsIngredient(slice []model.Ingredient, val model.Ingredient) bool {
     }
     return false
 }
+
+func ContainsTag(slice []model.Tag, val model.Tag) bool {
+    for _, tmp := range slice {
+        if tmp.Name == val.Name {
+            return true
+        }
+    }
+    return false
+}
