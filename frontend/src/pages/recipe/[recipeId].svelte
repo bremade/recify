@@ -110,7 +110,7 @@
     quick_ingredients = '';
   }
 
-  var edit = true;
+  var edit = false;
   var custom_tag = '';
   var tag_dialog;
   var quick_ingredients_dialog;
@@ -224,10 +224,16 @@
             <div class="method">
               <h4>Method</h4>
               {#each recipe.steps as step, index}
-                <Card class="m-2 p-2" variant="outlined">
-                  <h5>{index + 1}</h5>
-                  {step.description}
-                </Card>
+                <Container class="m-2 p-2" variant="outlined">
+                  <Row>
+                    <Col md="1" class="step-number">
+                    <h5>{index + 1}</h5>
+                    </Col>
+                    <Col md="11">
+                    {step.description}
+                    </Col>
+                  </Row>
+                </Container>
               {/each}
             </div>
           </Container>
