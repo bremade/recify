@@ -25,6 +25,14 @@ main#recipe {
     cursor: pointer;
   }
 
+  .step-number {
+    border-right: 2px solid black;
+
+    h5 {
+      font-weight: bold;
+    }
+  }
+
   .ingredients {
     
     ul {
