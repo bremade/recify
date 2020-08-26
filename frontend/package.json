@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "sirv-cli": "^1.0.0",
+    "sv-bootstrap-tooltip": "^0.2.0",
     "sveltestrap": "^3.7.3"
   }
 }

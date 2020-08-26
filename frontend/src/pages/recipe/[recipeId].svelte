@@ -71,8 +71,17 @@
     } else {
       const h = Math.floor(minutes / 60);
       const m = minutes % 60;
-      return `${h} h ${m} min`;
+
+      if (m > 0) {
+        return `${h} h ${m} min`;
+      } else {
+        return `${h} h`;
+      }
     }
+  }
+
+  function printTimeSum() {
+    return formatTime(Object.values(recipe.time).reduce((a, b) => a + b));
   }
   
   function addIngredient() {
@@ -90,6 +99,10 @@
 
   function addStep() {
     recipe.steps = [...recipe.steps, { description: '' }];
+  }
+
+  function showTimeDetail() {
+    time_dialog.open();
   }
 
   function quick_add_ingredients() {
@@ -113,9 +126,11 @@
   var edit = false;
   var custom_tag = '';
   var tag_dialog;
+  var time_dialog;
   var quick_ingredients_dialog;
   var custom_tag_value = '';
   var quick_ingredients = '';
+  var time_element;
 
   var new_ingredient = {
     ingredient: '',
@@ -185,17 +200,15 @@
         {:else}
           <p>
             <span class="m-2"><strong>{recipe.servings}</strong> Servings</span>&#x25CF;
-            <span class="m-2"><strong>{recipe.price}</strong> &#x20AC</span>
-          </p>
-          <p>
-            <span class="m-2"><em>Cook time:</em> <strong>{formatTime(recipe.time.cooktime)}</strong></span>&#x25CF;
-            <span class="m-2"><em>Work time:</em> <strong>{formatTime(recipe.time.worktime)}</strong></span>&#x25CF;
-            <span class="m-2"><em>Rest time:</em> <strong>{formatTime(recipe.time.resttime)}</strong></span>
+            <span class="m-2">
+              <a class="time-link" on:click={showTimeDetail}>Time: <strong>{printTimeSum()}</strong></a>
+            </span>&#x25CF;
+            <span class="m-2">Price: <strong>{recipe.price}</strong> &#x20AC</span>
           </p>
           <hr />
           <p>
-            <Set chips={recipe.tags} let:chip input style="display: inline">
-              <Chip><Text>{chip}</Text></Chip>
+            <Set chips={recipe.tags} let:chip input class="tags">
+             <Chip><Text><a href={`/tag/${chip}`}>{chip}</a></Text></Chip>
             </Set>
           </p>
         {/if}
@@ -348,5 +361,26 @@
         OK
       </Button>
     </Actions>
+  </Dialog>
+
+  <!-- Time detail dialog -->
+  <Dialog bind:this={time_dialog}>
+    <Title id="event-title">Time details</Title>
+    <Content id="event-content">
+      <Table class="table-striped">
+        <tr>
+          <td>Cook time</td>
+          <td>{formatTime(recipe.time.cooktime)}</td>
+        </tr>
+        <tr>
+          <td>Work time</td>
+          <td>{formatTime(recipe.time.worktime)}</td>
+        </tr>
+        <tr>
+          <td>Rest time</td>
+          <td>{formatTime(recipe.time.resttime)}</td>
+        </tr>
+      </Table>
+    </Content>
   </Dialog>
 </div>

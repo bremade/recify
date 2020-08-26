@@ -6,8 +6,11 @@ main#recipe {
   margin: 0 auto;
   margin-top: 20px;
 
+  font-family: roboto;
+
   h1, p {
     text-align: center;
+    color: rgba(0, 0, 0, .8);
   }
 
   .fullwidth {
@@ -25,8 +28,27 @@ main#recipe {
     cursor: pointer;
   }
 
+  .time-link {
+    cursor: pointer;
+    border-bottom: 1px solid #666666;
+  }
+
+  .tags {
+    display: inline;
+
+    a {
+      color: black;
+    }
+  }
+
+  h4 {
+    font-weight: 200;
+    font-family: Roboto;
+    margin-bottom: 20px;
+  }
+
   .step-number {
-    border-right: 2px solid black;
+    border-right: 1px solid black;
 
     h5 {
       font-weight: bold;
