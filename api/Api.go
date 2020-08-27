@@ -23,7 +23,7 @@ func (api *Api) Status(c *gin.Context) {
     c.JSONP(http.StatusOK, gin.H{ "status": "ok" })
 }
 
-func (api *Api) CheckLogin(c *gin.Context) (bool, string) {
+func (api *Api) checkLogin(c *gin.Context) (bool, string) {
     session := sessions.Default(c)
     loggedIn, userId := api.auth.GetSessionStatus(session)
 

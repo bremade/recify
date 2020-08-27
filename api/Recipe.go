@@ -180,7 +180,7 @@ func (api *Api) RetrieveTags(c *gin.Context) {
     }
 }
 
-func (api *Api) CheckAuthentication(id string, username string) (bool, error) {
+func (api *Api) checkAuthentication(id string, username string) (bool, error) {
     recipe, err := api.db.GetSingleRecipe(id)
 
     if err != nil {
@@ -190,7 +190,7 @@ func (api *Api) CheckAuthentication(id string, username string) (bool, error) {
     return util.ContainsString(recipe.Creators, username), nil
 }
 
-func (api *Api) CheckIngredients(ingredientsInput []model.Ingredient) error {
+func (api *Api) checkIngredients(ingredientsInput []model.Ingredient) error {
     ingredientsDB, err := api.db.GetAllIngredients()
 
     if err != nil {
@@ -210,7 +210,7 @@ func (api *Api) CheckIngredients(ingredientsInput []model.Ingredient) error {
     return nil
 }
 
-func (api *Api) CheckTags(tagsInput []model.Tag) error {
+func (api *Api) checkTags(tagsInput []model.Tag) error {
     tagsDB, err := api.db.GetAllTags()
 
     if err != nil {
