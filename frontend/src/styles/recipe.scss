@@ -5,12 +5,17 @@ main#recipe {
   display: block;
   margin: 0 auto;
   margin-top: 20px;
-
   font-family: roboto;
 
   h1, p {
     text-align: center;
     color: rgba(0, 0, 0, .8);
+  }
+
+  h4 {
+    font-weight: 200;
+    font-family: Roboto;
+    margin-bottom: 20px;
   }
 
   .fullwidth {
@@ -28,9 +33,15 @@ main#recipe {
     cursor: pointer;
   }
 
-  .time-link {
-    cursor: pointer;
-    border-bottom: 1px solid #666666;
+  .attributes {
+    //border: 1px solid rgba(0,0,0,.1);
+    padding: 10px;
+    border-radius: 20px;
+
+    .time-link {
+      cursor: pointer;
+      border-bottom: 1px solid #666666;
+    }
   }
 
   .tags {
@@ -41,25 +52,73 @@ main#recipe {
     }
   }
 
-  h4 {
-    font-weight: 200;
-    font-family: Roboto;
-    margin-bottom: 20px;
-  }
-
-  .step-number {
-    border-right: 1px solid black;
-
-    h5 {
+  .steps {
+    $step-number-size: 35px;
+    
+    .number {
+      display: block;
+      width: $step-number-size;
+      height: $step-number-size;
+      text-align: center;
+      line-height: $step-number-size;
+      background-color: $main-color;
+      border-radius: 100%;
       font-weight: bold;
+      color: white;
+      font-size: 15px;
+    }
+
+    .step {
+      padding-top: 7px;
     }
   }
 
-  .ingredients {
+  .recipe-image {
+    max-height: 400px;
+    object-fit: cover;
+    margin: 10px;
+  }
+
+  h5 {
+    font-size: 18px;
     
-    ul {
-      li {
-        margin-bottom: 10px;
+    .servings {
+      display: inline-block;;
+      width: 50px;
+      text-align: center;
+      margin: 0 5px 0 5px;
+    }
+  }
+
+  .attribute {
+    display: inline-block;
+    background-color: $gray;
+    padding: 5px 10px 5px 10px;
+    margin: 0px 5px 5px 0px;
+    color: black;
+    font-size: 15px;
+  }
+
+  table.ingredients {
+    width: 100%;
+
+    tr {
+      &.highlighted {
+        background-color: $gray;
+      }
+
+      td {
+        padding: 5px 0px 5px 0px;
+
+        &.amount {
+          min-width: 20%;
+          text-align: right;
+        }
+        
+        &.ingredient {
+          padding-left: 15px;
+          text-align:left;
+        }
       }
     }
   }
