@@ -24,7 +24,7 @@ func (api *Api) RetrieveRecipes(c *gin.Context) {
 
 func (api *Api) CreateRecipe(c *gin.Context) {
 
-    ok, username := api.CheckLogin(c)
+    ok, username := api.checkLogin(c)
 
     if !ok {
         c.String(http.StatusForbidden, "User is not logged in")
@@ -44,13 +44,13 @@ func (api *Api) CreateRecipe(c *gin.Context) {
         return
     }
 
-    err = api.CheckTags(recipeInput.Tags)
+    err = api.checkTags(recipeInput.Tags)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating tags")
         return
     }
 
-    err =  api.CheckIngredients(recipeInput.Ingredients)
+    err =  api.checkIngredients(recipeInput.Ingredients)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating ingredients")
         return
@@ -69,7 +69,7 @@ func (api *Api) CreateRecipe(c *gin.Context) {
 
 func (api *Api) ReplaceRecipe(c *gin.Context) {
 
-    ok, username := api.CheckLogin(c)
+    ok, username := api.checkLogin(c)
 
     if !ok {
         c.String(http.StatusForbidden, "User is not logged in")
@@ -84,7 +84,7 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
         return
     }
 
-    ok, err = api.CheckAuthentication(recipeInput.Id, username)
+    ok, err = api.checkAuthentication(recipeInput.Id, username)
     if err != nil {
         c.String(http.StatusNotFound, "Recipe with id %v was not found", recipeInput.Id)
         return
@@ -93,13 +93,13 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
         return
     }
 
-    err = api.CheckTags(recipeInput.Tags)
+    err = api.checkTags(recipeInput.Tags)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating tags")
         return
     }
 
-    err =  api.CheckIngredients(recipeInput.Ingredients)
+    err =  api.checkIngredients(recipeInput.Ingredients)
     if err != nil {
         c.String(http.StatusBadRequest, "Error while creating ingredients")
         return
@@ -122,7 +122,7 @@ func (api *Api) ReplaceRecipe(c *gin.Context) {
 
 func (api *Api) DeleteRecipe(c *gin.Context) {
 
-    ok, username := api.CheckLogin(c)
+    ok, username := api.checkLogin(c)
 
     if !ok {
         c.String(http.StatusForbidden, "User is not logged in")
@@ -136,7 +136,7 @@ func (api *Api) DeleteRecipe(c *gin.Context) {
         return
     }
 
-    ok, err := api.CheckAuthentication(id, username)
+    ok, err := api.checkAuthentication(id, username)
     if err != nil {
         c.String(http.StatusNotFound, "Recipe with id %v was not found", id)
         return
