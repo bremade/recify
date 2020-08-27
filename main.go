@@ -49,6 +49,14 @@ func main() {
     apiRouter.POST("/auth/register", recifyApi.Register)
     apiRouter.POST("/auth/logout", recifyApi.Logout)
 
+    // Recipe
+    apiRouter.GET("/recipe", recifyApi.RetrieveRecipes)
+    apiRouter.POST("/recipe", recifyApi.CreateRecipe)
+    apiRouter.PUT("/recipe", recifyApi.ReplaceRecipe)
+    apiRouter.DELETE("/recipe", recifyApi.DeleteRecipe)
+    apiRouter.GET("/ingredient", recifyApi.RetrieveIngredients)
+    apiRouter.GET("/tag", recifyApi.RetrieveTags)
+
 	// Static files
 	router.Static("/build", "./frontend/static/build")
 	router.NoRoute(func(c *gin.Context) {
