@@ -40,7 +40,7 @@ func (api *Api) CreateRecipe(c *gin.Context) {
     recipeInput.Id = newRecipeId
 
     if err != nil {
-        c.String(http.StatusBadRequest, "Bad Request")
+        c.String(http.StatusBadRequest, "Bad Request. " + err.Error())
         return
     }
 
