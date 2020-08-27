@@ -225,3 +225,25 @@ class TestAuth():
         )
         assert response.status_code == 403
         assert response.text == "User is not logged in"
+
+    @pytest.mark.depends(on=['testReplaceRecipeSuccess'])
+    def testGetRecipe(self):
+        global recipeId
+        
+        response = session.get(
+            BASE_URL + "/recipe/" + recipeId
+        )
+
+        body = response.json()
+        response = session.get(
+            BASE_URL + "/recipe/" + recipeId
+        )
+
+        recipeCopy = recipe
+        recipeCopy["id"] = recipeId
+        recipeCopy["creators"] = [
+            "Testuser"
+        ]
+
+        assert response.status_code == 200
+        assert body == recipeCopy

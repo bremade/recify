@@ -22,6 +22,19 @@ func (api *Api) RetrieveRecipes(c *gin.Context) {
     }
 }
 
+func (api *Api) RetrieveRecipe(c *gin.Context) {
+
+    id := c.Param("id")
+    recipe, err := api.db.GetSingleRecipe(id)
+
+    if err != nil {
+        c.String(http.StatusNotFound, "No recipe found")
+        fmt.Println(err)
+    } else {
+        c.JSON(http.StatusOK, recipe)
+    }
+}
+
 func (api *Api) CreateRecipe(c *gin.Context) {
 
     ok, username := api.checkLogin(c)
