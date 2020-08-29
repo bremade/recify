@@ -11,35 +11,35 @@ user = {
 
 tag = [
     {
-    "Name": "Testag"
+    "name": "Testag"
     }
 ]
 
 ingredient = [
     {
-    "Name": "Testingredient",
-    "Amount": 1,
-    "Unit": "mg"
+    "name": "Testingredient",
+    "amount": 1,
+    "unit": "mg"
     }
 ]
 
 recipe = {
-    "Title": "Testtitle",
-    "Description": "Testdescription",
-    "Tags": tag,
-    "Time": {
-        "Worktime": 1,
-        "Resttime": 2,
-        "Cooktime": 3
+    "title": "Testtitle",
+    "description": "Testdescription",
+    "tags": tag,
+    "time": {
+        "worktime": 1,
+        "resttime": 2,
+        "cooktime": 3
     },
-    "Price": 1,
-    "Servings": 1,
-    "Steps": [
+    "price": 1,
+    "servings": 1,
+    "steps": [
         {
-        "Description": "Teststep"
+        "description": "Teststep"
         }
     ],
-    "Ingredients": ingredient
+    "ingredients": ingredient
 }
 
 session = requests.Session()
@@ -112,9 +112,9 @@ class TestAuth():
         )
         body = response.json()
 
-        recipeId = body[0]["Id"]
-        recipe["Id"] = recipeId
-        recipe["Creators"] = [
+        recipeId = body[0]["id"]
+        recipe["id"] = recipeId
+        recipe["creators"] = [
             "Testuser"
         ]
 
@@ -150,8 +150,8 @@ class TestAuth():
         global recipeId
 
         recipeCopy = recipe
-        recipeCopy["Id"] = recipeId
-        recipeCopy["Title"] = "UpdatedTitle"
+        recipeCopy["id"] = recipeId
+        recipeCopy["title"] = "UpdatedTitle"
 
         response = session.put(
             BASE_URL + "/recipe",
@@ -181,10 +181,10 @@ class TestAuth():
         body = response.json()
         recipeCopy = recipe
 
-        recipeId = body[0]["Id"]
-        recipeCopy["Id"] = recipeId
-        recipeCopy["Title"] = "UpdatedTitle"
-        recipeCopy["Creators"] = [
+        recipeId = body[0]["id"]
+        recipeCopy["id"] = recipeId
+        recipeCopy["title"] = "UpdatedTitle"
+        recipeCopy["creators"] = [
             "Testuser"
         ]
 
@@ -225,3 +225,25 @@ class TestAuth():
         )
         assert response.status_code == 403
         assert response.text == "User is not logged in"
+
+    @pytest.mark.depends(on=['testReplaceRecipeSuccess'])
+    def testGetRecipe(self):
+        global recipeId
+        
+        response = session.get(
+            BASE_URL + "/recipe/" + recipeId
+        )
+
+        body = response.json()
+        response = session.get(
+            BASE_URL + "/recipe/" + recipeId
+        )
+
+        recipeCopy = recipe
+        recipeCopy["id"] = recipeId
+        recipeCopy["creators"] = [
+            "Testuser"
+        ]
+
+        assert response.status_code == 200
+        assert body == recipeCopy

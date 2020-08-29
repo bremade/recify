@@ -51,6 +51,7 @@ func main() {
 
     // Recipe
     apiRouter.GET("/recipe", recifyApi.RetrieveRecipes)
+    apiRouter.GET("/recipe/:id", recifyApi.RetrieveRecipe)
     apiRouter.POST("/recipe", recifyApi.CreateRecipe)
     apiRouter.PUT("/recipe", recifyApi.ReplaceRecipe)
     apiRouter.DELETE("/recipe", recifyApi.DeleteRecipe)
