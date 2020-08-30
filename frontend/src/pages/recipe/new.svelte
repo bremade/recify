@@ -12,6 +12,7 @@
   const units = [' ', 'g', 'mg', 'kg', 'l', 'ml', 'cl', 'tsp', 'tbsp', 'grain'];
 
   const empty_ingredient = { name: '', amount: 0, unit: units[0] };
+  const empty_step =  { description: '' };
 
   let recipe = {
     id: '',
@@ -23,7 +24,9 @@
       resttime: 0
     },
     ingredients: [{...empty_ingredient}],
-    steps: [],
+    steps: [
+      {...empty_step}
+    ],
     price: 0,
     description: '',
     tags: []
@@ -38,7 +41,7 @@
     { name: 'Check and publish', completed: false }
   ];
 
-  let current_step = 2;
+  let current_step = 3;
 
   function addIngredient() {
     recipe.ingredients = [...recipe.ingredients, {...empty_ingredient}];
@@ -47,6 +50,15 @@
   function removeIngredient(index) {
     recipe.ingredients.splice(index, 1);
     recipe.ingredients = recipe.ingredients;
+  }
+
+  function addStep() {
+    recipe.steps = [...recipe.steps, {...empty_step}];
+  }
+
+  function removeStep(index) {
+    recipe.steps.splice(index, 1);
+    recipe.steps = recipe.steps;
   }
 
 </script>
@@ -115,6 +127,24 @@
                 {/each}
               </Table>
               <Button on:click={addIngredient}>Add ingredient</Button>
+              <!-- Steps -->
+            {:else if current_step === 3}
+              {#each recipe.steps as step, index}
+                <Container class="m-2 p-2" variant="outlined">
+                  <Row class="steps">
+                    <Col md="1">
+                    <span class="number">{index + 1}</span>
+                    </Col>
+                    <Col md="11">
+                    <Textfield bind:value={step.description} label={`Step ${index + 1}`} textarea class="w-100" />
+                     {#if index > 0}
+                        <Button on:click={() => removeStep(index)}>Remove</Button>
+                      {/if}
+                    </Col>
+                  </Row>
+                </Container>
+              {/each}
+              <Button on:click={addStep}>Add Step</Button>
             {/if}
             <!-- Next-button -->
             <hr />
