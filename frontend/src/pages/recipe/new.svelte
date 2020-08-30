@@ -7,6 +7,11 @@
   import Navbar from '../../components/Navbar.svelte';
   import List, {Item, Text, Graphic, Separator, Subheader} from '@smui/list';
   import TimeInput from '../../components/Time.svelte';
+  import Select, {Option} from '@smui/select';
+
+  const units = [' ', 'g', 'mg', 'kg', 'l', 'ml', 'cl', 'tsp', 'tbsp', 'grain'];
+
+  const empty_ingredient = { name: '', amount: 0, unit: units[0] };
 
   let recipe = {
     id: '',
@@ -17,7 +22,7 @@
       worktime: 0,
       resttime: 0
     },
-    ingredients: [],
+    ingredients: [{...empty_ingredient}],
     steps: [],
     price: 0,
     description: '',
@@ -33,7 +38,17 @@
     { name: 'Check and publish', completed: false }
   ];
 
-  let current_step = 0;
+  let current_step = 2;
+
+  function addIngredient() {
+    recipe.ingredients = [...recipe.ingredients, {...empty_ingredient}];
+  }
+
+  function removeIngredient(index) {
+    recipe.ingredients.splice(index, 1);
+    recipe.ingredients = recipe.ingredients;
+  }
+
 </script>
 
 <div>
@@ -67,12 +82,39 @@
               <Textfield textarea variant="outlined" bind:value={recipe.description} label="Short description" class="fullwidth mt-2" />
               <hr />
               <Textfield variant="outlined" bind:value={recipe.servings} label="Servings" class="fullwidth" type="number" />
-            {/if}
-            <!-- Time -->
-            {#if current_step === 1}
+              <!-- Time -->
+            {:else if current_step === 1}
               <TimeInput bind:time={recipe.time.worktime} label="Work time" />
               <TimeInput bind:time={recipe.time.cooktime} label="Cook time" />
               <TimeInput bind:time={recipe.time.resttime} label="Rest time" />
+              <!-- Ingredients -->
+            {:else if current_step === 2}
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Ingredient</th><th>Amount</th><th>Unit</th><th></th>
+                  </tr>
+                </thead>
+                {#each recipe.ingredients as ingredient, index}
+                  <tr>
+                    <td><Textfield bind:value={ingredient.name} class="fullwidth"/></td>
+                    <td><Textfield bind:value={ingredient.amount} class="fullwidth"/></td>
+                    <td>
+                      <Select bind:value={ingredient.unit} label="Unit">
+                        {#each units as unit}
+                          <Option value={unit} selected={ingredient.unit === unit}>{unit}</Option>
+                        {/each}
+                      </Select>
+                    </td>
+                    <td>
+                      {#if index > 0}
+                        <Button on:click={() => removeIngredient(index)}>Remove</Button>
+                      {/if}
+                    </td>
+                  </tr>
+                {/each}
+              </Table>
+              <Button on:click={addIngredient}>Add ingredient</Button>
             {/if}
             <!-- Next-button -->
             <hr />
