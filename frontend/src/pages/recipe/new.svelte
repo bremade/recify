@@ -41,7 +41,7 @@
     { name: 'Check and publish', completed: false }
   ];
 
-  let current_step = 3;
+  let current_step = 0;
 
   function addIngredient() {
     recipe.ingredients = [...recipe.ingredients, {...empty_ingredient}];
@@ -59,6 +59,18 @@
   function removeStep(index) {
     recipe.steps.splice(index, 1);
     recipe.steps = recipe.steps;
+  }
+
+  function publish() {
+    // Convert all amounts to numbers
+    recipe.ingredients = recipe.ingredients.map(i => { return {...i, amount: Number(i.amount)}; });
+    // Send request
+    fetch('/api/v1/recipe', {
+      method: 'POST',
+      body: JSON.stringify(recipe)
+    }).then(result => {
+      console.log(result);
+    });
   }
 
 </script>
@@ -145,10 +157,16 @@
                 </Container>
               {/each}
               <Button on:click={addStep}>Add Step</Button>
+            {:else if current_step === 4}
+              <div>Tags</div>
+            {:else if current_step === 5}
+              <div>
+                <Button on:click={publish}>Publish recipe</Button>
+              </div>
             {/if}
             <!-- Next-button -->
-            <hr />
             {#if current_step < steps.length -1}
+              <hr />
               <Button variant="raised" class="float-right" on:click={() => current_step += 1}>Next: {steps[current_step + 1].name}</Button>
             {/if}
           </Container>
