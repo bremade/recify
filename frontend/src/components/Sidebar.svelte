@@ -16,7 +16,7 @@
 </script>
 
 <div>
-    <Drawer variant="modal" bind:this={drawer} bind:open={drawerOpen}>
+    <Drawer variant="modal" anchor="right" bind:this={drawer} bind:open={drawerOpen}>
       <Header>
         <Title>Recify</Title>
         {#if $session.logged_in}
