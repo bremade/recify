@@ -1,0 +1,38 @@
+/* General */
+
+/* On screens that are 951px or higher */
+.header-container {
+  max-width: 1200px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  .fullwidth {
+    width: 100%;
+  }
+
+  .containerCenter {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+
+/* On screens that are 950px or less*/
+@media screen and (max-width: 950px) {
+  .header-container {
+    max-width: 100%;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+  
+    .fullwidth {
+      width: 100%;
+    }
+
+    .textRight {
+      text-align: right;
+    }
+  }
+}
