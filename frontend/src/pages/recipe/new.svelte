@@ -69,7 +69,9 @@
       method: 'POST',
       body: JSON.stringify(recipe)
     }).then(result => {
-      console.log(result);
+      if (result.status === 201) {
+        window.location.pathname = '/';
+      }
     });
   }
 
