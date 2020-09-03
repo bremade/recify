@@ -21,18 +21,10 @@
 </script>
 
 <div class="search-box">
-  <form class="search-form">
-    <Row>
-      <Col>
-        <input class="input-field" id="searchRecipe" autocomplete="off" maxlength="100" placeholder="e.g. Pizza, Quesadilla"/>
-      </Col>
-      <Col class="text-right input-buttons">
-        <IconButton class="material-icons" aria-label="Open recipe search">search</IconButton>
-        <IconButton class="material-icons" aria-label="Random recipe" href={"/recipe/" + randomId}>casino</IconButton>
-        {#if isOpen}
-          <IconButton class="material-icons" aria-label="Close search bar" on:click={() => isOpen = !isOpen}>close</IconButton>
-        {/if}
-      </Col>
-   </Row>
-  </form>
+  <input class="input-field" id="searchRecipe" autocomplete="off" maxlength="100" placeholder="e.g. Pizza, Quesadilla"/>
+  <IconButton class="material-icons" aria-label="Open recipe search">search</IconButton>
+  <IconButton class="material-icons" aria-label="Random recipe" href={"/recipe/" + randomId}>casino</IconButton>
+  {#if isOpen}
+    <IconButton class="material-icons" aria-label="Close search bar" on:click={() => isOpen = !isOpen}>close</IconButton>
+  {/if}
 </div>
