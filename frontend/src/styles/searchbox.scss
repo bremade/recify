@@ -14,7 +14,11 @@
     border: none;
     height:  $search-box-height;
     padding-left: 20px;
+    padding-top: 5px;
     width: calc(100% - 70px);
+    @media screen and (max-width: 850px) {
+      width: calc(100% - 100px);
+    }
   }
   
   .input-buttons {
