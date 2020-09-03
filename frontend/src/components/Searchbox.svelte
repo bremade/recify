@@ -2,6 +2,8 @@
   import { Container, Col, Row } from 'sveltestrap';
   import IconButton from '@smui/icon-button';
 
+  export let isOpen = false;
+
   // Extract random recipe id
   //const id = 
   let recipeIds = [];
@@ -27,6 +29,9 @@
       <Col class="text-right input-buttons">
         <IconButton class="material-icons" aria-label="Open recipe search">search</IconButton>
         <IconButton class="material-icons" aria-label="Random recipe" href={"/recipe/" + randomId}>casino</IconButton>
+        {#if isOpen}
+          <IconButton class="material-icons" aria-label="Close search bar" on:click={() => isOpen = !isOpen}>close</IconButton>
+        {/if}
       </Col>
    </Row>
   </form>
