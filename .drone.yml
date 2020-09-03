@@ -14,6 +14,7 @@ steps:
       - EXIT_CODE=$(docker inspect api_tests --format='{{.State.ExitCode}}')
       - if [ $EXIT_CODE -eq 1 ]; then exit 1; fi
       - docker-compose -f test-docker-compose.yml down
+      - docker system prune -a -f
   - name: Deployment
     image: kroniak/ssh-client
     commands:
