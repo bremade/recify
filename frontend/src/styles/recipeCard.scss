@@ -1,0 +1,34 @@
+$primary-color: #333;
+$gray: #f2f2f2;
+
+#recipeCards {
+
+  .gridLayout {
+    margin-bottom: 20px;
+    height: 100%;
+  }
+
+  .cardImage {
+    height: auto;
+    width: 100%;
+    vertical-align: middle;
+  }
+
+  .cardContent {
+    min-height: 100px;
+  }
+
+  h3 {
+    height: 39px;
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  a {
+    text-decoration: none;
+    color: $primary-color;
+  }
+}
+
+
