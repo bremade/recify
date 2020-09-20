@@ -8,8 +8,10 @@
   import List, {Item, Text, Graphic, Separator, Subheader} from '@smui/list';
   import TimeInput from '../../components/Time.svelte';
   import Select, {Option} from '@smui/select';
+  import Tags from "svelte-tags-input";
 
   const units = [' ', 'g', 'mg', 'kg', 'l', 'ml', 'cl', 'tsp', 'tbsp', 'grain'];
+  let allTags = [];
 
   const empty_ingredient = { name: '', amount: 0, unit: units[0] };
   const empty_step =  { description: '' };
@@ -64,6 +66,8 @@
   function publish() {
     // Convert all amounts to numbers
     recipe.ingredients = recipe.ingredients.map(i => { return {...i, amount: Number(i.amount)}; });
+    // Convert tags to model
+    recipe.tags = recipe.tags.map(tag => { return { name: tag }; });
     // Send request
     fetch('/api/v1/recipe', {
       method: 'POST',
@@ -74,6 +78,9 @@
       }
     });
   }
+
+  // Fetch all tags
+  fetch('/api/v1/tag').then(res => res.json()).then(tags => allTags = tags.map(t => t.name));
 
 </script>
 
@@ -159,8 +166,13 @@
                 </Container>
               {/each}
               <Button on:click={addStep}>Add Step</Button>
+              <!-- Tags -->
             {:else if current_step === 4}
-              <div>Tags</div>
+              <div>
+                <div class="mb-2">Write tag-name and press 'RETURN'</div>
+                <Tags onlyUnique={true} placeholder="Tags" tags={recipe.tags} autoComplete={allTags} />
+              </div>
+              <!-- Publish -->
             {:else if current_step === 5}
               <div>
                 <Button on:click={publish}>Publish recipe</Button>

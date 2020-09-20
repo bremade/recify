@@ -30,7 +30,7 @@
         <Subheader component={H6}>User</Subheader>
 
         {#if $session.logged_in}
-          <Item href="javascript:void(0)" on:click={() => setActive('Create Recipe')} activated={active === 'Create Recipe'}>
+          <Item href="javascript:void(0)" on:click={() => {window.location.pathname = '/recipe/new'; setActive('Create Recipe')}} activated={active === 'Create Recipe'}>
             <Graphic class="material-icons" aria-hidden="true">fastfood</Graphic>
             <Text>Create Recipe</Text>
           </Item>
