@@ -10,7 +10,7 @@
   let recipe = {
     id: id,
     title: '',
-    servings: 0,
+    servings: 1,
     time: {
       cooktime: 0,
       worktime: 0,
@@ -54,6 +54,14 @@
     return `${eur}.${String(cent).padStart(2, '0')}`;
   }
 
+  // Constraint values for servings
+
+  function servingsConstraint(_) {
+    if (servings < 1) servings = 1;
+    if (servings > 99) servings = 99;
+  }
+
+  $: servingsConstraint(servings);
 </script>
 
 <div>
@@ -82,7 +90,7 @@
         <Container class="mt-2 p-3">
           <div class="ingredients">
             <h4>Details</h4>
-            <h5 class="ml-3">A recipe for <input type="number" class="servings" bind:value={servings} /> persons</h5>
+            <h5 class="ml-3">A recipe for <input type="number" class="servings" bind:value={servings} /> person{servings > 1 ? 's' : ''}</h5>
             <Table class="mt-3">
               <tr>
                 <td>Price <small>(per serving)</small></td>
