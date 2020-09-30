@@ -1,0 +1,33 @@
+$main-color: #2196f3;
+$primary-color: #333;
+
+.tag-box {
+  border: 1px solid $main-color;
+  border-radius: 20px;
+  display: flex;
+  padding: 5px 8px;
+
+  a {
+    text-decoration: none;
+    font-size: 16px;
+    color: $primary-color;
+    text-align: center;
+  }
+}
+
+.tag-box:hover {
+  background-color: $main-color;
+
+  a {
+    color: white;
+  }
+}
+
+.swiper-slide {
+  width: auto !important;
+}
+
+.swiper-container {
+  margin-left: 15px;
+  margin-right: 15px;
+}

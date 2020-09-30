@@ -1,5 +1,6 @@
-import HMR from '@sveltech/routify/hmr'
+import HMR from '@sveltech/routify/hmr';
 import App from './App.svelte';
+import 'swiper/swiper-bundle.css';
 
 const app = HMR(
 	App, 

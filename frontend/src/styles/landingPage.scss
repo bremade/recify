@@ -19,5 +19,25 @@ main#content {
     font-weight: 700;
     font-size: 30px;
   }
+
+  .rowLayout {
+    margin-bottom: 40px;
+  }
+
+  .moreButton {
+      border: 1px solid $main-color;
+      background-color: $main-color;
+      border-radius: 20px;
+
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 15px;
+      color: white;
+    }
+
+  .moreButton:hover {
+    background-color: white;
+    color: $primary-color;
+  }
 }
 

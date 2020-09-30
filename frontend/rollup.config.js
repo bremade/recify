@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import postcss from 'rollup-plugin-postcss';
+import css from 'rollup-plugin-css-only';
 import { terser } from 'rollup-plugin-terser';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -69,7 +70,12 @@ export default {
 			  }]
 			]
 		  }),
-		commonjs(),
+		commonjs({
+            namedExports: {
+                'svelte-swiper': ['Swiper', 'SwiperSlide']
+            }
+        }),
+        css({ output: 'static/build/swiper-bundle.css' }),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
