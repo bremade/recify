@@ -1,7 +1,6 @@
 <script>
   import TopAppBar from '@smui/top-app-bar';
   import { Collapse, Container, Col, Row } from 'sveltestrap';
-  import { Button, Card } from 'sveltestrap';
   import IconButton from '@smui/icon-button';
   import Sidebar from './Sidebar.svelte';
   import Searchbox from './Searchbox.svelte';

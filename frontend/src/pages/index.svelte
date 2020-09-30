@@ -5,7 +5,7 @@
   import Slider from '../components/landingpage/Slider.svelte';
   import { Container, Row, Col, Button } from 'sveltestrap';
 
-  let topRecipes = ["Das ist ein unglaublich langer text um den umbruch zu testen", "Test2", "Der Text hier ist noch länger und geht über ganze 3 Zeilen statt nur 2 wuhuuu wuhuuuuu", "Test4", "Test5", "Test6", "Test7", "Test8"]
+  let topRecipes = ["Das ist ein unglaublich langer text um den umbruch zu testen", "Test2", "Der Text hier ist noch länger und geht über ganze 3 Zeilen statt nur 2 wuhuuu wuhuuuuu", "Test4", "Test5", "Test6"]
   let topCategories = [
     "Tag 1",
     "Tag 2",
@@ -29,8 +29,9 @@
   ]
   let top2Categories = topCategories.slice(0, 2);
   let tmp = [
-    "Test",
-    "Test"
+    "Test 1",
+    "Test 2",
+    "Test 3"
   ]
 </script>
 
@@ -43,7 +44,7 @@
     </Row>
     <Row id="recipeCards" class="rowLayout">
       {#each topRecipes as topRecipe}
-        <Col sm="12" md="4" xl="3" class="gridLayout">
+        <Col sm="12" md="6" xl="4" class="gridLayout">
           <RecipeCard recipeId={topRecipe}/>
         </Col>
       {/each}
@@ -67,7 +68,7 @@
       </Row>
       <Row id="recipeCards" class="rowLayout">
         {#each tmp as tmp}
-          <Col sm="12" md="4" xl="3" class="gridLayout">
+          <Col sm="12" md="6" xl="4" class="gridLayout">
             <RecipeCard recipeId={tmp}/>
           </Col>
         {/each}

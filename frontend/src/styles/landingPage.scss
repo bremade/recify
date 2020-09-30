@@ -3,12 +3,16 @@ $gray: #f2f2f2;
 $main-color: #2196f3;
 
 main#content {
-  max-width: 1200px;
+  max-width: 1300px;
   width: 100%;
   display: block;
   margin: 0 auto;
   margin-top: 20px;
   font-family: roboto;
+
+  .container {
+    max-width: 1300px;
+  }
 
   h2 {
     border-left: 6px solid $main-color;
@@ -18,6 +22,9 @@ main#content {
     margin-bottom: 40px;
     font-weight: 700;
     font-size: 30px;
+    @media screen and (max-width: 1320px) {
+      margin-left: 15px;
+    }
   }
 
   .rowLayout {
