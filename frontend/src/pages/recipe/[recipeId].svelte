@@ -1,8 +1,9 @@
 ﻿<script>
-  import { params } from '@sveltech/routify'
+  import { context, params } from '@sveltech/routify'
   import Card from '@smui/card';
   import { Container, Row, Col, Table } from 'sveltestrap';
   import Navbar from '../../components/Navbar.svelte';
+  import formatter from '../../utils/formatter.js';
 
   // Extract recipe-id from route
   const id = $params.recipeId;
@@ -31,28 +32,6 @@
     recipe = { ...recipe, ...resp };
     servings = recipe.servings;
   });
-
-  function formatTime(minutes) {
-    if (minutes < 60) {
-      return `${minutes} min`;
-    } else {
-      const h = Math.floor(minutes / 60);
-      const m = minutes % 60;
-
-      if (m > 0) {
-        return `${h} h ${m} min`;
-      } else {
-        return `${h} h`;
-      }
-    }
-  }
-
-  function formatPrice(price) {
-    const eur = Math.floor(price);
-    const cent = (price - eur) * 100;
-
-    return `${eur}.${String(cent).padStart(2, '0')}`;
-  }
 
   // Constraint values for servings
 
@@ -95,19 +74,19 @@
             <Table class="mt-3">
               <tr>
                 <td>Price <small>(per serving)</small></td>
-                <td>{formatPrice(recipe.price)} &euro;</td>
+                <td>{formatter.formatPrice(recipe.price)} &euro;</td>
               </tr>
               <tr>
                 <td>Work time</td>
-                <td>{formatTime(recipe.time.worktime)}</td>
+                <td>{formatter.formatTime(recipe.time.worktime)}</td>
               </tr>
               <tr>
                 <td>Cook time</td>
-                <td>{formatTime(recipe.time.cooktime)}</td>
+                <td>{formatter.formatTime(recipe.time.cooktime)}</td>
               </tr>
               <tr>
                 <td>Rest time</td>
-                <td>{formatTime(recipe.time.resttime)}</td>
+                <td>{formatter.formatTime(recipe.time.resttime)}</td>
               </tr>
             </Table>
           </div>
