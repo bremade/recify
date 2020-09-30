@@ -10,11 +10,15 @@
   let hours = Math.floor(time / 60);
 
   function calculateTime(_) {
+    if (hours < 0) hours = Math.abs(hours);
+    if (minutes < 0) minutes = Math.abs(minutes);
+    
     time = minutes + hours * 60;
   }
 
   $: calculateTime(hours);
   $: calculateTime(minutes);
+
   
 </script>
 

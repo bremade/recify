@@ -24,3 +24,7 @@ a {
   color: $main-color;
   margin-right: 10px;
 }
+
+.svelte-tags-input-tag {
+  background-color: $main-color !important;
+}

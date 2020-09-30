@@ -63,6 +63,21 @@
     recipe.steps = recipe.steps;
   }
 
+  function constraintServings(_) {
+    if (recipe.servings < 0) recipe.servings = Math.abs(recipe.servings);
+  }
+
+  $: constraintServings(recipe.servings)
+
+  function constraintIngredients(_) {
+    recipe.ingredients = recipe.ingredients.map(i => {
+      if (i.amount < 0) i.amount = 0;
+      return i;
+    });
+  }
+
+  $: constraintIngredients(recipe.ingredients);
+
   function publish() {
     // Convert all amounts to numbers
     recipe.ingredients = recipe.ingredients.map(i => { return {...i, amount: Number(i.amount)}; });
