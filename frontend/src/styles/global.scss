@@ -6,13 +6,25 @@ $gray: #f2f2f2;
 @import './recipe.scss';
 @import './header.scss';
 @import './searchbox.scss';
+@import './recipe.scss';
 
 $font-stack:    Helvetica, sans-serif;
 $primary-color: #333;
+
+
 
 body {
     font: 100% $font-stack;
     color: $primary-color;
     margin: 0;
     background-color: #f3f3f3;
+}
+
+a {
+  color: $main-color;
+  margin-right: 10px;
+}
+
+.svelte-tags-input-tag {
+  background-color: $main-color !important;
 }

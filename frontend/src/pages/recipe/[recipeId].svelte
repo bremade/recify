@@ -62,7 +62,6 @@
   }
 
   $: servingsConstraint(servings);
-
 </script>
 
 <div>
