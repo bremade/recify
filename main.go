@@ -2,6 +2,9 @@ package main
 
 import (
     "os"
+    "net/url"
+    "net/http"
+    "net/http/httputil"
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/sessions"
     
@@ -14,6 +17,25 @@ func errorHandler(err error, exitCode int) {
 	if err != nil {
 		os.Exit(exitCode)
 	}
+}
+
+func handleKeycloakProxy(c *gin.Context) {
+    remote, err := url.Parse("http://keycloak:8080")
+	if err != nil {
+		panic(err)
+	}
+
+    proxy := httputil.NewSingleHostReverseProxy(remote)
+    
+    director := func(req *http.Request) {
+        req.Header = c.Request.Header
+        req.Host = remote.Host
+        req.URL.Scheme = remote.Scheme
+        req.URL.Host = remote.Host
+    }
+
+    proxy.Director = director
+    proxy.ServeHTTP(c.Writer, c.Request)
 }
 
 func main() {
@@ -38,17 +60,21 @@ func main() {
 
 	db.Setup()
 
+    // OAuth2
+    providerURL := "http://localhost:8000/auth/realms/recify"
+
 	// Api
-    recifyApi := api.New(&db)
+    recifyApi := api.New(&db, providerURL)
 	apiRouter := router.Group("/api/v1")
 	apiRouter.GET("/status", recifyApi.Status)
 
     // Authentication
-    apiRouter.POST("/auth/login", recifyApi.Login)
+    apiRouter.GET("/auth/token", recifyApi.CheckCode)
     apiRouter.GET("/auth/status", recifyApi.AuthStatus)
-    apiRouter.POST("/auth/register", recifyApi.Register)
-    apiRouter.POST("/auth/logout", recifyApi.Logout)
-
+    
+    router.GET("/login", recifyApi.Login)
+    router.GET("/logout", recifyApi.Logout)
+    
     // Recipe
     apiRouter.GET("/recipe", recifyApi.RetrieveRecipes)
     apiRouter.GET("/recipe/:id", recifyApi.RetrieveRecipe)
@@ -57,6 +83,9 @@ func main() {
     apiRouter.DELETE("/recipe", recifyApi.DeleteRecipe)
     apiRouter.GET("/ingredient", recifyApi.RetrieveIngredients)
     apiRouter.GET("/tag", recifyApi.RetrieveTags)
+
+    // Keycloak
+    router.Any("/auth/*path", handleKeycloakProxy)
 
 	// Static files
 	router.Static("/build", "./frontend/static/build")

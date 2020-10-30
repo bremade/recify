@@ -13,6 +13,9 @@
     active = value;
     drawerOpen = false;
   }
+
+  const random_string = Math.random().toString(36).substring(7);
+  const keycloak_login = `/auth/realms/recify/protocol/openid-connect/auth?client_id=recify_app&response_type=code&login=true&scope=openid+profile+email&redirect_uri=${window.location.protocol}//${window.location.host}/api/v1/auth/token`;
 </script>
 
 <Drawer variant="modal" anchor="right" bind:this={drawer} bind:open={drawerOpen}>
@@ -38,12 +41,12 @@
             <Graphic class="material-icons" aria-hidden="true">restaurant_menu</Graphic>
             <Text>Import Recipe</Text>
           </Item>
-          <Item href="javascript:void(0)" on:click={() => {window.location.pathname = '/logout'; setActive('Auth')}} activated={active === 'Auth'}>
+          <Item href="javascript:void(0)" on:click={() => {window.location.href = '/logout'; setActive('Auth')}} activated={active === 'Auth'}>
             <Graphic class="material-icons" aria-hidden="true">exit_to_app</Graphic>
             <Text>Logout</Text>
           </Item>
         {:else}
-          <Item href="/login" on:click={() => setActive('Auth')} activated={active === 'Auth'}>
+          <Item on:click={() => window.location.href = keycloak_login} activated={active === 'Auth'}>
             <Graphic class="material-icons" aria-hidden="true">account_circle</Graphic>
             <Text>Login</Text>
           </Item>

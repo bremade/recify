@@ -1,77 +1,76 @@
 package api
 
 import (
-    "net/http"
-    "github.com/gin-gonic/gin"
-    "github.com/gin-contrib/sessions"
+    "fmt"
+    "context"
 
     "github.com/bremade/recify/model"
+    
+    "github.com/gin-gonic/gin"
+    "github.com/gin-contrib/sessions"
+    oidc "github.com/coreos/go-oidc"
 )
 
-func (api *Api) Login(c *gin.Context) {
-    var credentials model.UsernameAndPassword
-    err := c.BindJSON(&credentials)
+func (api *Api) CheckCode(c *gin.Context) {
+    ctx := context.Background()
 
+    api.StartOAuth()
+
+    oidcConfig := &oidc.Config{
+        ClientID: "recify_app",
+    }
+    
+    verifier := api.provider.Verifier(oidcConfig)
+    
+    code := c.Query("code")
+
+    fmt.Println("===== Get Auth Token =====")
+    fmt.Println("code: " + code)
+
+    oauth2Token, err := api.oauth2Config.Exchange(ctx, code)
     if err != nil {
-        c.String(http.StatusBadRequest, "Bad Request")
+        c.String(500, "Failed to exchange token: "+err.Error())
         return
     }
-
-    ok, userId := api.auth.CheckUser(credentials.Username, credentials.Password)
-
+    rawIDToken, ok := oauth2Token.Extra("id_token").(string)
     if !ok {
-        c.String(http.StatusForbidden, "Login failed")
-    } else {
-        api.auth.Login(sessions.Default(c), userId)
-        c.String(http.StatusOK, "OK")
+        c.String(500, "No id_token field in oauth2 token.")
+        return
     }
-}
-
-func (api *Api) Logout(c *gin.Context) {
-    api.auth.Logout(sessions.Default(c))
-    c.String(http.StatusOK, "OK")
-}
-
-func (api *Api) Register(c *gin.Context) {
-    var credentials model.UsernameAndPassword
-    err := c.BindJSON(&credentials)
-
+    idToken, err := verifier.Verify(ctx, rawIDToken)
     if err != nil {
-        c.String(http.StatusBadRequest, "Bad Request")
+        c.String(500, "Failed to verify ID Token: "+err.Error())
         return
     }
 
-    taken, err := api.auth.RegisterUser(credentials.Username, credentials.Password)
-
-    if taken {
-        c.String(http.StatusConflict, "Username already taken")
-        return
+    var claims struct {
+        Username string `json:"email"`
     }
 
-    if err == nil {
-        c.String(http.StatusOK, "Registration OK")
-    } else {
-        c.String(http.StatusInternalServerError, err.Error())
-    }
+    idToken.Claims(&claims)
+
+    api.auth.Login(sessions.Default(c), claims.Username)
+
+    c.Redirect(302, "/")
 }
 
 func (api *Api) AuthStatus(c *gin.Context) {
     session := sessions.Default(c)
     loggedIn, userId := api.auth.GetSessionStatus(session)
-
-    // Fetch username
-    username := ""
-    if loggedIn {
-        user, err := api.db.GetUserById(userId)
-        if err != nil {
-            c.String(http.StatusInternalServerError, err.Error())
-            return
-        }
-        username = user.Name
-    }
     
-    c.JSON(http.StatusOK, model.SessionStatus{
+    c.JSON(200, model.SessionStatus{
         LoggedIn: loggedIn,
-        Username: username,
+        Username: userId,
     })
 }
+
+func (api *Api) Logout(c *gin.Context) {
+    api.auth.Logout(sessions.Default(c))
+    c.Redirect(302, api.providerURL + "/protocol/openid-connect/logout?redirect_uri=http://localhost:8000")
+}
+
+func (api *Api) Login(c *gin.Context) {
+    api.StartOAuth()
+    c.Redirect(302, api.oauth2Config.AuthCodeURL("login-state"))
+}
+

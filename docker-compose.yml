@@ -20,6 +20,32 @@ services:
       - mongo_db:/data/db
     ports:
       - 27017:27017
+  keycloak_postgres:
+    image: postgres
+    container_name: keycloak_postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+  keycloak:
+    image: quay.io/keycloak/keycloak:11.0.0
+    container_name: keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak_postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+      PROXY_ADDRESS_FORWARDING: 'true'
+    depends_on:
+      - keycloak_postgres
+    ports:
+      - 8080:8080
 
 volumes:
   mongo_db:

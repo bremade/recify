@@ -27,3 +27,5 @@
 # Testing
 */__pycache__
 *package-lock.json
+
+postgres_data/
